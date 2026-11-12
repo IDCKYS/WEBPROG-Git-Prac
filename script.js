@@ -57,7 +57,7 @@
             vertexShader: 'varying vec3 vP; void main(){ vP = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
             fragmentShader: 'varying vec3 vP; void main(){ float h = vP.y; vec3 c = mix(vec3(0.03,0.10,0.14), vec3(0.0,0.004,0.012), smoothstep(-0.05,0.9,h)); c = mix(vec3(0.0,0.003,0.005), c, smoothstep(-0.5,0.0,h)); gl_FragColor = vec4(c,1.0); }'
         })));
-        var strip = new THREE.MeshBasicMaterial(); strip.color.setRGB(3.0, 5.5, 7.0);
+        var strip = new THREE.MeshBasicMaterial(); strip.color.setRGB(1.2, 2.2, 2.8);
         [[0, 20, -30, 40, 0.8], [-30, 16, 0, 0.8, 30], [30, 16, 5, 0.8, 30], [0, 30, 10, 30, 0.8]].forEach(function (s) {
             var m = new THREE.Mesh(new THREE.BoxGeometry(s[3], s[4], s[3] === 0.8 ? s[4] : 0.8), strip); m.position.set(s[0], s[1], s[2]); es.add(m);
         });
@@ -121,7 +121,7 @@
             o.material = o.material.clone(); var m = o.material;
             m.userData.baseOpacity = m.opacity; m.userData.baseTransparent = m.transparent;
             if (m.name === 'hero_glow') { m.emissive.setRGB(glow[0], glow[1], glow[2]); m.color.setRGB(glow[0], glow[1], glow[2]); m.emissiveIntensity = 1.7; m.fog = false; }
-            else { m.envMapIntensity = 2.6; }
+            else { m.envMapIntensity = 0.45; if (m.color && m.map) m.color.setScalar(0.62); if (m.roughness !== undefined && m.name !== "hero_glass") m.roughness = Math.min(1, m.roughness * 1.15 + 0.05); }
             mats.push(m); o.frustumCulled = false;
         });
         var fix = new THREE.Group(); fix.rotation.y = Math.PI; fix.add(model);        // model faces -Z; the sim drives +Z

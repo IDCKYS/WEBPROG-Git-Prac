@@ -265,7 +265,7 @@
         for (i = 0; i < N; i++) locs.push(sampleLocal(sampler, new THREE.Vector3()));
         locs.sort(function (a, b) { return b.z - a.z; });                                   // tail first (model faces -Z)
         parts = locs.map(function (l, i) {
-            return { loc: l, tx: targets[i][0], ty: targets[i][1], launch: t + (i / N) * 0.85 + Math.random() * 0.1, dur: rnd(0.9, 1.4), on: false, s: new THREE.Vector3(), c: new THREE.Vector3(), seed: Math.random() * 6.283 };
+            return { loc: l, tx: targets[i][0], ty: targets[i][1], launch: t + (i / N) * 1.6 + Math.random() * 0.12, dur: rnd(1.5, 2.15), on: false, s: new THREE.Vector3(), c: new THREE.Vector3(), seed: Math.random() * 6.283 };
         });
         partGeo = new THREE.BufferGeometry();
         partGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(N * 3), 3).setUsage(THREE.DynamicDrawUsage));
@@ -320,7 +320,7 @@
         grid.material.uniforms.cam.value.copy(camera.position);
 
         var m0 = t >= morphT ? morphT : 999;
-        var bikeFade = 1 - ease(m0, m0 + 0.9, t), wallFade = 1 - ease(m0, m0 + 1.2, t), oWall = crashT < 0 ? 1 : Math.max(0, 1 - (t - crashT) * 0.7);
+        var bikeFade = 1 - ease(m0, m0 + 1.7, t), wallFade = 1 - ease(m0, m0 + 2.2, t), oWall = crashT < 0 ? 1 : Math.max(0, 1 - (t - crashT) * 0.7);
         setFade(bikes.blue, bikeFade);
         blueLight.intensity = 6 * bikeFade;
         updateWalls(wallsBlue, blue.trail, [blue.r - Math.sin(blue.th) * HALF, blue.z - Math.cos(blue.th) * HALF], wallFade);
@@ -343,9 +343,9 @@
 
         if (t >= morphT) {
             if (!parts) startParticles(morphT);
-            var end = drawParticles(t); if (end && t > end + 0.7 && !tEnd) tEnd = t;
+            var end = drawParticles(t); if (end && t > end + 1.0 && !tEnd) tEnd = t;
         }
-        post.uniforms.dim.value = 0.6 * ease(morphT, morphT + 1.3, t);
+        post.uniforms.dim.value = 0.6 * ease(morphT, morphT + 2.0, t);
         post.uniforms.fade.value = 1 - ease(0, 0.6, t);
         post.uniforms.flash.value.set(0, 0, 0);          // no full-screen tint: the burst is the local orange light + shards
         if (doRender) composer.render();

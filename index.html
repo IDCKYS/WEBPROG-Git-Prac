@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dev Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="intro-active">
+
+    <!-- Running background: wireframe sphere + scrolling code -->
+    <canvas id="bg-canvas" aria-hidden="true"></canvas>
+
+    <!-- Light cycle battle intro -->
+    <div id="intro" role="presentation">
+        <canvas id="intro-canvas"></canvas>
+        <div id="intro-title" aria-hidden="true"><pre id="intro-type"></pre></div>
+        <button id="skip-intro" type="button">Skip intro</button>
+    </div>
+
+    <div class="frame">
+    <div class="frame-inner">
+
+    <header id="home">
+        <h1>Dev Portfolio</h1>
+        <p class="tagline">Brian D. Mercado, also known as IDC &quot;MoB&quot; KYS. Learning Freelancer.</p>
+
+        <nav aria-label="Main navigation">
+            <a href="#about">About</a>
+            <a href="#skills">Skills</a>
+            <a href="#education">Education</a>
+            <a href="#projects">Projects</a>
+            <a href="#goals">Goals</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </header>
+
+    <main>
+        <section id="about">
+            <h2>About Me</h2>
+            <div class="about-grid">
+                <img src="profile.jpg" alt="Profile picture of Brian D. Mercado: a manga-style drawing of a young man with glasses and headphones" width="180" height="180">
+                <div>
+                    <p>Greetings, I'm an Information Technology student aspiring for game development and to learn skills that I can pick up along the way.</p>
+                    <p>I have taken interest in web development as a part of my journey for game development, with the intention of making a future site containing info and services for my future games.</p>
+                    <p>My hobbies are mostly playing games and watching media outside of coding, aside from occasionally watching educational videos during my free time.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="skills">
+            <h2>My Technical Skills</h2>
+            <h3>Languages</h3>
+            <ul class="skill-list">
+                <li>Python</li>
+                <li>Java</li>
+                <li>HTML</li>
+                <li>CSS</li>
+                <li>JavaScript</li>
+                <li>Git</li>
+                <li>Luau</li>
+                <li>C++</li>
+            </ul>
+            <h3>Technical skills</h3>
+            <ul class="skill-list">
+                <li>Self-workflow management</li>
+                <li>Error handling</li>
+                <li>Project planning</li>
+            </ul>
+            <h3>Artistic skills</h3>
+            <ul class="skill-list">
+                <li>Conceptual design</li>
+                <li>3D modelling</li>
+                <li>2D art</li>
+            </ul>
+        </section>
+
+        <section id="education">
+            <h2>Educational Background</h2>
+            <table>
+                <thead>
+                    <tr><th scope="col">Category</th><th scope="col">Details</th></tr>
+                </thead>
+                <tbody>
+                    <tr><th scope="row">School</th><td>National University</td></tr>
+                    <tr><th scope="row">Program</th><td>BSIT</td></tr>
+                    <tr><th scope="row">Year Level</th><td>Second Year</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="projects">
+            <h2>My Projects</h2>
+            <article>
+                <h3>Project 1: 3D Portfolio Site</h3>
+                <p>A 3D portfolio site for my first two mini-games.</p>
+            </article>
+            <article>
+                <h3>Project 2: Undead Masses: TD</h3>
+                <p>A heavily mechanics-based tower defense game, currently in its early stages of development.</p>
+            </article>
+        </section>
+
+        <section id="goals">
+            <h2>My Career Goals</h2>
+            <ol>
+                <li>Earn cash to fund development and hardware purchases</li>
+                <li>Make a full game</li>
+                <li>Release it as a complete game</li>
+            </ol>
+        </section>
+
+        <section id="contact">
+            <h2>Contact Me</h2>
+            <p>Email:
+                <a href="mailto:briandmercado06@gmail.com">Contact via Email</a>
+            </p>
+            <form>
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name">
+
+                <label for="message">Message:</label>
+                <textarea id="message" name="message" rows="5"></textarea>
+
+                <button type="button">Send Message</button>
+            </form>
+            <p class="note">Note: This form is a visual prototype only.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p class="status-bar">&copy; 2026 Brian D. Mercado. All rights reserved.</p>
+        <p class="closing">End of line. Thanks for visiting.</p>
+    </footer>
+
+    </div>
+    </div>
+
+    <script src="vendor/three.min.js"></script>
+    <script src="vendor/GLTFLoader.js"></script>
+    <script src="vendor/Pass.js"></script>
+    <script src="vendor/CopyShader.js"></script>
+    <script src="vendor/LuminosityHighPassShader.js"></script>
+    <script src="vendor/EffectComposer.js"></script>
+    <script src="vendor/RenderPass.js"></script>
+    <script src="vendor/ShaderPass.js"></script>
+    <script src="vendor/UnrealBloomPass.js"></script>
+    <script src="vendor/Reflector.js"></script>
+    <script src="model.js"></script>
+    <script src="background.js"></script>
+    <script src="script.js"></script>
+    <script src="lighting.js"></script>
+</body>
+</html>

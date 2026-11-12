@@ -68,38 +68,38 @@
     scene.add(new THREE.Mesh(new THREE.SphereGeometry(600, 32, 16), new THREE.ShaderMaterial({
         side: THREE.BackSide, depthWrite: false, fog: false,
         vertexShader: 'varying vec3 vP; void main(){ vP = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
-        fragmentShader: 'varying vec3 vP; void main(){ float h = clamp(vP.y,0.0,1.0); vec3 c = vec3(0.0,0.0008,0.0025) + vec3(0.002,0.022,0.04) * exp(-h * 16.0); gl_FragColor = vec4(c,1.0); }'
+        fragmentShader: 'varying vec3 vP; void main(){ float h = clamp(vP.y,0.0,1.0); vec3 c = vec3(0.0,0.0004,0.0012) + vec3(0.001,0.008,0.014) * exp(-h * 16.0); gl_FragColor = vec4(c,1.0); }'
     })));
     // floor: mirror + world-space grid
     var floorMirror = LITE ? new THREE.Mesh(new THREE.PlaneGeometry(1400, 1400), new THREE.MeshBasicMaterial({ color: 0x000102 }))
-        : new THREE.Reflector(new THREE.PlaneGeometry(1400, 1400), { color: 0x3a5560, textureWidth: Math.round(W * 0.5), textureHeight: Math.round(H * 0.5), clipBias: 0.003 });
+        : new THREE.Reflector(new THREE.PlaneGeometry(1400, 1400), { color: 0x24363d, textureWidth: Math.round(W * renderer.getPixelRatio()), textureHeight: Math.round(H * renderer.getPixelRatio()), clipBias: 0.003 });
     floorMirror.rotation.x = -Math.PI / 2; scene.add(floorMirror);
     var grid = new THREE.Mesh(new THREE.PlaneGeometry(1400, 1400), new THREE.ShaderMaterial({
         transparent: true, depthWrite: false,
         vertexShader: 'varying vec3 vW; void main(){ vec4 w = modelMatrix * vec4(position,1.0); vW = w.xyz; gl_Position = projectionMatrix * viewMatrix * w; }',
         fragmentShader: 'varying vec3 vW; uniform vec3 cam; float gl(vec2 p, float s){ vec2 q = p / s; vec2 g = abs(fract(q - 0.5) - 0.5) / fwidth(q); return 1.0 - min(min(g.x, g.y), 1.0); }' +
-            'void main(){ float a = gl(vW.xz, 4.0) * 0.40 + gl(vW.xz, 20.0) * 0.85; float d = length(vW.xz - cam.xz); a *= 1.0 - smoothstep(80.0, 480.0, d); gl_FragColor = vec4(vec3(0.3,0.85,1.0), a * 0.85); }',
+            'void main(){ float a = gl(vW.xz, 4.0) * 0.30 + gl(vW.xz, 20.0) * 0.70; float d = length(vW.xz - cam.xz); a *= 1.0 - smoothstep(40.0, 260.0, d); gl_FragColor = vec4(vec3(0.10,0.30,0.42), a * 0.9); }',
         uniforms: { cam: { value: new THREE.Vector3() } }
     }));
     grid.rotation.x = -Math.PI / 2; grid.position.y = 0.004; scene.add(grid);
 
-    scene.add(new THREE.HemisphereLight(0x2f7fa3, 0x010305, 0.95));
-    var key = new THREE.DirectionalLight(0x8fd6ff, 2.4); key.position.set(-20, 30, -10); scene.add(key);
-    var blueLight = new THREE.PointLight(0x4fc3ff, 11, 16, 1.4), orangeLight = new THREE.PointLight(0xff7a14, 11, 16, 1.4);
+    scene.add(new THREE.HemisphereLight(0x2a6e8f, 0x010305, 0.35));
+    var key = new THREE.DirectionalLight(0x8fd6ff, 1.5); key.position.set(-20, 30, -10); scene.add(key);
+    var blueLight = new THREE.PointLight(0x4fc3ff, 6, 5.5, 2), orangeLight = new THREE.PointLight(0xff7a14, 6, 5.5, 2);
     scene.add(blueLight); scene.add(orangeLight);
 
     // post: bloom + grade + fade / dim / flash
     var composer = new THREE.EffectComposer(renderer);
     composer.setPixelRatio(renderer.getPixelRatio()); composer.setSize(W, H);
     composer.addPass(new THREE.RenderPass(scene, camera));
-    var bloom = new THREE.UnrealBloomPass(new THREE.Vector2(LITE ? W / 2 : W, LITE ? H / 2 : H), 1.15, 0.6, 0.68); composer.addPass(bloom);
+    var bloom = new THREE.UnrealBloomPass(new THREE.Vector2(LITE ? W / 2 : W, LITE ? H / 2 : H), 0.9, 0.18, 1.0); composer.addPass(bloom);
     var post = new THREE.ShaderPass({
         uniforms: { tDiffuse: { value: null }, fade: { value: 1 }, dim: { value: 0 }, flash: { value: new THREE.Vector3() } },
         vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
         fragmentShader: 'uniform sampler2D tDiffuse; uniform float fade, dim; uniform vec3 flash; varying vec2 vUv;' +
             'void main(){ vec3 c = texture2D(tDiffuse, vUv).rgb; float l = dot(c, vec3(0.3,0.6,0.1));' +
-            'c *= 1.0 - dim * 0.7 * (1.0 - smoothstep(0.35, 1.6, l)); c += flash; c = 1.0 - exp(-c * 1.25);' +
-            'vec2 q = vUv - 0.5; c *= 1.0 - dot(q, q) * 1.0; c = pow(c, vec3(1.0 / 2.2)); c += (fract(sin(dot(vUv * 1731.0, vec2(12.9898, 78.233))) * 43758.5453) - 0.5) / 128.0; gl_FragColor = vec4(c * (1.0 - fade), 1.0); }'
+            'c *= 1.0 - dim * 0.7 * (1.0 - smoothstep(0.35, 1.6, l)); c += flash; c = max(c - 0.006, 0.0); c = 1.0 - exp(-c * 2.1);' +
+            'vec2 q = vUv - 0.5; c *= 1.0 - dot(q, q) * 1.0; c = pow(c, vec3(1.0 / 2.0)); c += (fract(sin(dot(vUv * 1731.0, vec2(12.9898, 78.233))) * 43758.5453) - 0.5) / 128.0; gl_FragColor = vec4(c * (1.0 - fade), 1.0); }'
     });
     composer.addPass(post);
 
@@ -163,7 +163,7 @@
         var mesh = new THREE.Mesh(g, m); mesh.frustumCulled = false; scene.add(mesh);
         return { mesh: mesh, g: g, pos: pos, y0: y0, y1: y1, base: opacity };
     }
-    function wallSet(rgb) { return [makeWall([rgb[0] * 0.6, rgb[1] * 0.6, rgb[2] * 0.6], 0.42, 0.0, 1.15), makeWall(rgb, 0.9, 1.12, 1.18), makeWall(rgb, 1.0, 0.0, 0.07)]; }
+    function wallSet(rgb) { return [makeWall([rgb[0] * 0.5, rgb[1] * 0.5, rgb[2] * 0.5], 0.2, 0.0, 1.15), makeWall(rgb, 0.9, 1.12, 1.18), makeWall(rgb, 1.0, 0.0, 0.07)]; }
     function updateWalls(set, trail, tail, fade) {
         var n = Math.min(trail.length, MAXSEG), start = trail.length - n;
         set.forEach(function (w) {
@@ -316,13 +316,13 @@
             var bk = pr[0], s = pr[1];
             bk.rig.position.set(-s.r, 0, s.z); bk.rig.rotation.y = -s.th; bk.lean.rotation.z = -s.roll;
         });
-        blueLight.position.set(-blue.r, 0.7, blue.z); orangeLight.position.set(-orange.r, 0.7, orange.z); orangeLight.intensity = orange.alive ? 11 : flash * 120; orangeLight.distance = orange.alive ? 16 : 30;
+        blueLight.position.set(-blue.r, 0.7, blue.z); orangeLight.position.set(-orange.r, 0.7, orange.z); orangeLight.intensity = orange.alive ? 6 : flash * 70; orangeLight.distance = orange.alive ? 5.5 : 12;
         grid.material.uniforms.cam.value.copy(camera.position);
 
         var m0 = t >= morphT ? morphT : 999;
         var bikeFade = 1 - ease(m0, m0 + 0.9, t), wallFade = 1 - ease(m0, m0 + 1.2, t), oWall = crashT < 0 ? 1 : Math.max(0, 1 - (t - crashT) * 0.7);
         setFade(bikes.blue, bikeFade);
-        blueLight.intensity = 11 * bikeFade;
+        blueLight.intensity = 6 * bikeFade;
         updateWalls(wallsBlue, blue.trail, [blue.r - Math.sin(blue.th) * HALF, blue.z - Math.cos(blue.th) * HALF], wallFade);
         updateWalls(wallsOrange, orange.trail, orange.alive ? [orange.r - Math.sin(orange.th) * HALF, orange.z - Math.cos(orange.th) * HALF] : null, oWall);
 
@@ -347,7 +347,7 @@
         }
         post.uniforms.dim.value = 0.6 * ease(morphT, morphT + 1.3, t);
         post.uniforms.fade.value = 1 - ease(0, 0.6, t);
-        post.uniforms.flash.value.set(flash * 0.05, flash * 0.017, flash * 0.003);
+        post.uniforms.flash.value.set(0, 0, 0);          // no full-screen tint: the burst is the local orange light + shards
         if (doRender) composer.render();
         if (tEnd && t > tEnd && !TEST) finish();
     }
